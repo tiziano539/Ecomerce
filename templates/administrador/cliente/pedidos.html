@@ -1,0 +1,54 @@
+{% extends 'administrador/index.html' %}
+
+{% block title %}Mis Pedidos | Tienda{% endblock title %}
+
+{% block codigoDinamico %}
+<main class="flex-1 flex flex-col relative w-full pt-14 pb-20 bg-surface">
+  <div class="px-margin pt-space-md pb-space-lg flex flex-col gap-space-md max-w-3xl mx-auto w-full">
+    <div>
+      <span class="font-label-sm text-label-sm text-secondary tracking-widest uppercase block mb-0.5">Historial</span>
+      <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Mis Pedidos</h2>
+    </div>
+
+    <!-- Lista de Historial de Pedidos -->
+    <div class="flex flex-col gap-space-xs">
+      {% for pedido in pedidos %}
+      <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-sm">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-xs">
+          <div>
+            <span class="font-label-sm text-label-sm text-secondary uppercase font-semibold">Orden #{{ pedido.id }}</span>
+            <h4 class="font-headline-sm text-headline-sm text-primary">Fecha: {{ pedido.fecha|date:"d/m/Y" }}</h4>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">{{ pedido.items_count|default:0 }} unidades · {{ pedido.direccion_envio }}, {{ pedido.ciudad_envio }}</p>
+          </div>
+          <div class="flex items-center gap-space-md">
+            <span class="font-headline-sm text-headline-sm text-primary">${{ pedido.total|floatformat:2 }}</span>
+            <span class="px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm uppercase">{{ pedido.get_estado_display }}</span>
+          </div>
+        </div>
+        <ul class="border-t border-outline-variant pt-space-xs">
+          {% for item in pedido.items.all %}
+          <li class="py-1 text-body-sm">{{ item.cantidad }} × {{ item.producto.nombre_producto }} — ${{ item.subtotal|floatformat:2 }}</li>
+          {% endfor %}
+        </ul>
+        {% if pedido.estado == "pendiente" %}
+        <div class="flex gap-space-xs">
+          <form method="post" action="{% url 'confirmar_pedido' pedido.id %}">
+            {% csrf_token %}
+            <button type="submit" class="rounded-full bg-primary-container px-4 py-2 text-on-primary">Confirmar pago</button>
+          </form>
+          <form method="post" action="{% url 'cancelar_pedido' pedido.id %}">
+            {% csrf_token %}
+            <button type="submit" class="rounded-full bg-error-container px-4 py-2 text-on-error-container">Cancelar pedido</button>
+          </form>
+        </div>
+        {% endif %}
+      </div>
+      {% empty %}
+      <div class="bg-surface-container-lowest p-space-lg rounded-full text-center text-on-surface-variant shadow-sm">
+        <p class="font-body-md text-body-md">Aún no has realizado ninguna compra.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</main>
+{% endblock codigoDinamico %}

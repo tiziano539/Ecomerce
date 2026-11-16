@@ -1,0 +1,47 @@
+{% extends 'administrador/index.html' %}
+
+{% block title %}Finalizar Compra | Tienda{% endblock title %}
+
+{% block codigoDinamico %}
+<main class="flex-1 flex flex-col relative w-full pt-14 pb-20 bg-surface">
+  <div class="px-margin pt-space-md pb-space-lg flex flex-col gap-space-md max-w-2xl mx-auto w-full">
+    <div>
+      <span class="font-label-sm text-label-sm text-secondary tracking-widest uppercase block mb-0.5">Paso Final</span>
+      <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Finalizar Compra</h2>
+    </div>
+
+    <form method="post" class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+      {% csrf_token %}
+      
+      <div class="flex flex-col gap-space-xs">
+        <h3 class="font-headline-sm text-headline-sm text-primary">Datos de Envío</h3>
+        
+        <div>
+          <label for="{{ form.direccion.id_for_label }}" class="block font-label-md text-label-md text-on-surface-variant mb-1">{{ form.direccion.label }}</label>
+          {{ form.direccion }}
+          {% for error in form.direccion.errors %}<p class="text-body-sm text-error">{{ error }}</p>{% endfor %}
+        </div>
+
+        <div>
+          <label for="{{ form.ciudad.id_for_label }}" class="block font-label-md text-label-md text-on-surface-variant mb-1">{{ form.ciudad.label }}</label>
+          {{ form.ciudad }}
+          {% for error in form.ciudad.errors %}<p class="text-body-sm text-error">{{ error }}</p>{% endfor %}
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-space-xs pt-space-xs border-t border-outline-variant">
+        <h3 class="font-headline-sm text-headline-sm text-primary">Método de Pago</h3>
+        
+        {{ form.metodo_pago }}
+        {% for error in form.metodo_pago.errors %}<p class="text-body-sm text-error">{{ error }}</p>{% endfor %}
+      </div>
+
+      {% if form.non_field_errors %}<div class="text-error">{{ form.non_field_errors }}</div>{% endif %}
+      <p class="font-label-lg text-primary">Total: ${{ total|floatformat:2 }}</p>
+      <button type="submit" class="w-full h-12 mt-space-xs bg-primary-container text-on-primary font-label-lg rounded-full hover:bg-secondary transition-colors shadow-sm">
+        Confirmar y Pagar
+      </button>
+    </form>
+  </div>
+</main>
+{% endblock codigoDinamico %}

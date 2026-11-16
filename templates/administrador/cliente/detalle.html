@@ -1,0 +1,59 @@
+{% extends 'administrador/index.html' %}
+
+{% block title %}{{ producto.nombre_producto }} | Tienda{% endblock title %}
+
+{% block codigoDinamico %}
+<main class="flex-1 flex flex-col relative w-full pt-14 pb-20 bg-surface">
+  <div class="px-margin pt-space-md pb-space-lg flex flex-col md:flex-row gap-space-lg max-w-4xl mx-auto w-full">
+    
+    <!-- Imagen del Producto -->
+    <div class="w-full md:w-1/2 aspect-square rounded-xl flex items-center justify-center overflow-hidden bg-surface-container-low text-secondary shadow-sm">
+      {% if producto.imagen %}
+      <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre_producto }}" class="h-full w-full object-cover">
+      {% else %}
+      <span class="material-symbols-outlined text-8xl" aria-hidden="true">inventory_2</span>
+      {% endif %}
+    </div>
+
+    <!-- Info del Producto -->
+    <div class="w-full md:w-1/2 flex flex-col justify-between gap-space-md">
+      <div>
+        <span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest block">{{ producto.marca_producto.nombre_marca }}</span>
+        <h2 class="font-display-hero-mobile text-display-hero-mobile text-primary tracking-tight mt-1">{{ producto.nombre_producto }}</h2>
+        <p class="font-display-hero text-display-hero text-primary font-bold mt-space-xs">${{ producto.precio|floatformat:2 }}</p>
+
+        <p class="font-body-md text-body-md text-on-surface-variant mt-space-md">
+          Producto de la marca {{ producto.marca_producto.nombre_marca }}.
+        </p>
+        <p class="mt-space-xs text-body-sm text-on-surface-variant">Disponibles: {{ producto.stock }}</p>
+      </div>
+
+      {% if producto.stock > 0 and producto.precio > 0 %}
+      {% if request.user.is_authenticated and not request.user.is_staff %}
+      <form method="post" action="{% url 'agregar_al_carrito' producto.id %}" class="flex flex-col gap-space-sm pt-space-md">
+        {% csrf_token %}
+        <div class="flex items-center gap-space-sm">
+          <label for="cantidad" class="font-label-md text-label-md text-on-surface-variant">Cantidad:</label>
+          <input id="cantidad" type="number" name="cantidad" value="1" min="1" max="{{ producto.stock }}" class="w-20 h-10 px-3 bg-surface-container-low border border-outline-variant rounded-full text-center text-primary font-semibold focus:outline-none focus:border-secondary">
+        </div>
+
+        <button type="submit" class="w-full h-12 bg-primary-container text-on-primary font-label-lg rounded-full hover:bg-secondary transition-colors shadow-sm flex items-center justify-center gap-space-xs">
+          <span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+          <span>Añadir al Carrito</span>
+        </button>
+      </form>
+      {% elif not request.user.is_authenticated %}
+      <a href="{% url 'login_cliente' %}?next={% url 'detalle' producto.id %}" class="mt-space-md inline-flex justify-center rounded-full bg-primary-container px-space-lg py-3 text-on-primary">
+        Inicia sesión para comprar
+      </a>
+      {% else %}
+      <p class="pt-space-md text-on-surface-variant">La compra está disponible para cuentas de cliente.</p>
+      {% endif %}
+      {% else %}
+      <p class="pt-space-md text-error">{% if producto.stock == 0 %}Producto agotado.{% else %}Este producto aún no tiene un precio definido.{% endif %}</p>
+      {% endif %}
+    </div>
+
+  </div>
+</main>
+{% endblock codigoDinamico %}

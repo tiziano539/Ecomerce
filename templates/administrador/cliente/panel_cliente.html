@@ -1,0 +1,53 @@
+{% extends 'administrador/index.html' %}
+
+{% block title %}Mi Panel | Tienda{% endblock title %}
+
+{% block codigoDinamico %}
+<main class="flex-1 flex flex-col relative w-full pt-14 pb-20 bg-surface">
+  <div class="px-margin pt-space-md pb-space-lg flex flex-col gap-space-md max-w-3xl mx-auto w-full">
+    <div>
+      <span class="font-label-sm text-label-sm text-secondary tracking-widest uppercase block mb-0.5">Bienvenido</span>
+      <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Panel del Cliente</h2>
+    </div>
+
+    <!-- Opciones de Navegación Rápida -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+      <a href="{% url 'mis_pedidos' %}" class="bg-surface-container-lowest p-space-md rounded-full shadow-sm hover:shadow-md transition-shadow flex items-center gap-space-md">
+        <div class="w-12 h-12 rounded-full bg-secondary-fixed text-secondary flex items-center justify-center">
+          <span class="material-symbols-outlined text-[24px]">package_2</span>
+        </div>
+        <div>
+          <h3 class="font-headline-sm text-headline-sm text-primary">Mis Pedidos</h3>
+          <p class="font-body-sm text-body-sm text-on-surface-variant">Consulta el estado de tus compras</p>
+        </div>
+      </a>
+
+      <a href="{% url 'perfil_cliente' %}" class="bg-surface-container-lowest p-space-md rounded-full shadow-sm hover:shadow-md transition-shadow flex items-center gap-space-md">
+        <div class="w-12 h-12 rounded-full bg-secondary-fixed text-secondary flex items-center justify-center">
+          <span class="material-symbols-outlined text-[24px]">manage_accounts</span>
+        </div>
+        <div>
+          <h3 class="font-headline-sm text-headline-sm text-primary">Mi Perfil</h3>
+          <p class="font-body-sm text-body-sm text-on-surface-variant">Actualiza tus datos y direcciones</p>
+        </div>
+      </a>
+    </div>
+
+    <!-- Sección Último Pedido -->
+    <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-xs mt-space-sm">
+      <h3 class="font-headline-sm text-headline-sm text-primary">Último Pedido</h3>
+      {% if ultimo_pedido %}
+      <div class="flex items-center justify-between pt-space-xs border-t border-outline-variant">
+        <div>
+          <p class="font-label-md text-label-md text-primary font-semibold">Orden #{{ ultimo_pedido.id }}</p>
+          <p class="font-body-sm text-body-sm text-on-surface-variant">{{ ultimo_pedido.fecha|date:"d/m/Y" }} · ${{ ultimo_pedido.total|floatformat:2 }}</p>
+        </div>
+        <span class="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm rounded-full uppercase">{{ ultimo_pedido.get_estado_display }}</span>
+      </div>
+      {% else %}
+      <p class="text-body-sm text-on-surface-variant">Todavía no tienes pedidos. <a class="text-secondary underline" href="{% url 'catalogo' %}">Explora el catálogo</a>.</p>
+      {% endif %}
+    </div>
+  </div>
+</main>
+{% endblock codigoDinamico %}

@@ -1,0 +1,61 @@
+{% extends 'administrador/index.html' %}
+
+{% block title %}Mi Carrito | Tienda{% endblock title %}
+
+{% block codigoDinamico %}
+<main class="flex-1 flex flex-col relative w-full pt-14 pb-20 bg-surface">
+  <div class="px-margin pt-space-md pb-space-lg flex flex-col gap-space-md max-w-4xl mx-auto w-full">
+    <div>
+      <span class="font-label-sm text-label-sm text-secondary tracking-widest uppercase block mb-0.5">Resumen de Compra</span>
+      <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Mi Carrito</h2>
+    </div>
+
+    <!-- Lista de Productos en Carrito -->
+    <div class="flex flex-col gap-gutter">
+      {% for item in items %}
+      <div class="bg-surface-container-lowest p-space-sm rounded-full shadow-sm flex items-center justify-between gap-space-md">
+        <div class="flex items-center gap-space-md">
+          <div class="w-16 h-16 rounded-full overflow-hidden bg-surface-container-low flex-shrink-0">
+            <span class="material-symbols-outlined text-secondary" aria-hidden="true">inventory_2</span>
+          </div>
+          <div>
+            <h4 class="font-headline-sm text-headline-sm text-primary">{{ item.producto.nombre_producto }}</h4>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Cantidad: {{ item.cantidad }} • ${{ item.producto.precio|floatformat:2 }} c/u</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-space-md">
+          <span class="font-headline-sm text-headline-sm text-primary">${{ item.subtotal|floatformat:2 }}</span>
+          <form method="post" action="{% url 'quitar_del_carrito' item.id %}">
+            {% csrf_token %}
+            <button type="submit" class="text-on-surface-variant hover:text-error transition-colors p-1" aria-label="Quitar {{ item.producto.nombre_producto }}">
+              <span class="material-symbols-outlined text-[20px]">delete</span>
+            </button>
+          </form>
+        </div>
+      </div>
+      {% empty %}
+      <div class="bg-surface-container-lowest p-space-lg rounded-full text-center text-on-surface-variant shadow-sm">
+        <span class="material-symbols-outlined text-[48px] text-outline-variant mb-2">shopping_cart</span>
+        <p class="font-body-md text-body-md">Tu carrito está vacío actualmente.</p>
+        <a href="{% url 'catalogo' %}" class="inline-block mt-space-sm px-space-md py-2 bg-primary-container text-on-primary font-label-md rounded-full hover:bg-secondary transition-colors">
+          Explorar Catálogo
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Resumen Total y Checkout -->
+    <div class="bg-surface-container-lowest p-space-md rounded-full shadow-sm flex flex-col md:flex-row items-center justify-between gap-space-sm">
+      <div>
+        <span class="font-label-md text-label-md text-on-surface-variant block">Total a Pagar</span>
+        <span class="font-display-hero-mobile text-display-hero-mobile text-primary font-bold">${{ total|floatformat:2 }}</span>
+      </div>
+      {% if items %}<a href="{% url 'checkout' %}" class="w-full md:w-auto h-12 px-space-xl bg-primary-container text-on-primary font-label-lg rounded-full hover:bg-secondary transition-colors shadow-sm flex items-center justify-center gap-space-xs">
+        <span>Proceder al Pago</span>
+        <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</main>
+{% endblock codigoDinamico %}

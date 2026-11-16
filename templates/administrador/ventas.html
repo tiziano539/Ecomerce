@@ -1,0 +1,42 @@
+{% extends 'administrador/index.html' %}
+
+{% block title %}Ventas | Administrador{% endblock title %}
+
+{% block codigoDinamico %}
+<main class="flex-1 w-full bg-surface px-margin pt-20 pb-24">
+  <div class="mx-auto flex max-w-6xl flex-col gap-space-md">
+    <div class="flex flex-wrap items-end justify-between gap-space-sm">
+      <div>
+        <span class="font-label-sm text-secondary uppercase tracking-widest">Registro de órdenes</span>
+        <h1 class="font-headline-lg text-primary">Detalles de ventas</h1>
+      </div>
+      <a href="{% url 'crear_venta' %}" class="rounded-full bg-primary-container px-5 py-3 text-on-primary">Registrar venta</a>
+    </div>
+    <div class="overflow-x-auto rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+      <table class="w-full border-collapse text-left">
+        <thead><tr class="border-b border-outline-variant text-on-surface-variant">
+          <th class="px-3 py-3">Orden</th><th class="px-3 py-3">Cliente</th><th class="px-3 py-3">Producto</th><th class="px-3 py-3">Fecha</th><th class="px-3 py-3">Pago</th><th class="px-3 py-3">Monto</th><th class="px-3 py-3 text-right">Acciones</th>
+        </tr></thead>
+        <tbody class="divide-y divide-surface-container-low">
+          {% for venta in ventas %}
+          <tr>
+            <td class="px-3 py-3">#{{ venta.id }}</td>
+            <td class="px-3 py-3">{{ venta.usuario.nombre_usuario }}</td>
+            <td class="px-3 py-3">{{ venta.producto.nombre_producto }}</td>
+            <td class="px-3 py-3">{{ venta.fecha_venta|date:"d/m/Y" }}</td>
+            <td class="px-3 py-3">{{ venta.forma_de_pago }}</td>
+            <td class="px-3 py-3">${{ venta.monto|floatformat:2 }}</td>
+            <td class="whitespace-nowrap px-3 py-3 text-right">
+              <a href="{% url 'editar_venta' venta.id %}" class="mr-3 text-secondary">Editar</a>
+              <a href="{% url 'eliminar_venta' venta.id %}" class="text-error">Eliminar</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="7" class="px-3 py-8 text-center text-on-surface-variant">No hay ventas registradas.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+{% endblock codigoDinamico %}

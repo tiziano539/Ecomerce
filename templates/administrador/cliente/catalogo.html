@@ -1,0 +1,68 @@
+{% extends 'administrador/index.html' %}
+
+{% block title %}Catálogo de Productos | Tienda{% endblock title %}
+
+{% block codigoDinamico %}
+<main class="flex-1 flex flex-col relative w-full pt-14 pb-20 bg-surface">
+  <div class="px-margin pt-space-md pb-space-lg flex flex-col gap-space-md">
+    
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-xs">
+      <div>
+        <span class="font-label-sm text-label-sm text-secondary tracking-widest uppercase block mb-0.5">Explorar</span>
+        <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Catálogo de Productos</h2>
+      </div>
+    </div>
+
+    <!-- Filtros por Categoría -->
+    <div class="flex items-center gap-space-xs overflow-x-auto no-scrollbar py-space-xs -mx-margin px-margin">
+      <span class="category-pill active flex-shrink-0 h-9 px-space-md rounded-full font-label-md text-label-md tracking-wider uppercase bg-primary-container text-on-primary shadow-sm">Todos</span>
+    </div>
+
+    <!-- Grid de Productos -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-gutter">
+      {% for producto in productos %}
+      <article class="bg-surface-container-lowest rounded-xl p-space-sm flex flex-col shadow-sm">
+        <div class="relative w-full aspect-[4/5] rounded-xl flex items-center justify-center overflow-hidden bg-surface-container-low text-secondary">
+          {% if producto.imagen %}
+          <img class="h-full w-full object-cover" src="{{ producto.imagen.url }}" alt="{{ producto.nombre_producto }}">
+          {% else %}
+          <span class="material-symbols-outlined text-6xl" aria-hidden="true">inventory_2</span>
+          {% endif %}
+        </div>
+        <div class="p-space-xs pt-space-sm flex flex-col flex-1 justify-between gap-space-xs">
+          <div>
+            <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">{{ producto.marca_producto.nombre_marca }}</p>
+            <h4 class="font-headline-sm text-headline-sm text-primary line-clamp-1 mt-0.5">
+              <a href="{% url 'detalle' producto.id %}" class="hover:text-secondary transition-colors">{{ producto.nombre_producto }}</a>
+            </h4>
+          </div>
+          <div class="flex items-center justify-between pt-space-xs">
+            <span class="font-headline-sm text-headline-sm text-primary tracking-tight">${{ producto.precio|floatformat:2 }}</span>
+            {% if producto.stock > 0 and producto.precio > 0 %}
+            {% if request.user.is_authenticated and not request.user.is_staff %}
+            <form method="post" action="{% url 'agregar_al_carrito' producto.id %}">
+              {% csrf_token %}
+              <input type="hidden" name="cantidad" value="1">
+              <button aria-label="Agregar {{ producto.nombre_producto }} al carrito" class="w-9 h-9 rounded-full bg-surface-container hover:bg-secondary-container text-primary flex items-center justify-center shadow-sm" type="submit">
+                <span class="material-symbols-outlined text-[20px]">add</span>
+              </button>
+            </form>
+            {% elif not request.user.is_authenticated %}
+            <a href="{% url 'login_cliente' %}?next={% url 'catalogo' %}" class="text-secondary underline">Inicia sesión para comprar</a>
+            {% else %}
+            <span class="text-body-sm text-on-surface-variant">Compra disponible para clientes</span>
+            {% endif %}
+            {% else %}
+            <span class="text-body-sm text-error">{% if producto.stock == 0 %}Agotado{% else %}Precio sin definir{% endif %}</span>
+            {% endif %}
+          </div>
+        </div>
+      </article>
+      {% empty %}
+      <p class="col-span-full text-center text-on-surface-variant py-space-lg">No hay productos disponibles por el momento.</p>
+      {% endfor %}
+    </div>
+
+  </div>
+</main>
+{% endblock codigoDinamico %}

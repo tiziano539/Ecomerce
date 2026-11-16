@@ -1,0 +1,26 @@
+{% extends 'administrador/index.html' %}
+
+{% block title %}Registrarse | AURA{% endblock title %}
+
+{% block codigoDinamico %}
+<main class="flex-1 pt-20 pb-24 px-margin">
+  <section class="mx-auto max-w-xl rounded-xl bg-surface-container-lowest p-space-lg shadow-sm">
+    <h1 class="font-headline-lg text-primary">Crear cuenta</h1>
+    <p class="mt-space-sm text-on-surface-variant">Completa tus datos para registrarte.</p>
+    <form method="post" class="mt-space-md flex flex-col gap-space-md">
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="text-error">{{ form.non_field_errors }}</div>{% endif %}
+      {% for field in form %}
+      <div class="flex flex-col gap-1">
+        <label for="{{ field.id_for_label }}" class="font-label-md text-primary">{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}<div class="text-body-sm text-on-surface-variant">{{ field.help_text|safe }}</div>{% endif %}
+        {% for error in field.errors %}<p class="text-body-sm text-error">{{ error }}</p>{% endfor %}
+      </div>
+      {% endfor %}
+      <button type="submit" class="rounded-full bg-primary-container px-5 py-3 text-on-primary">Registrarme</button>
+    </form>
+    <p class="mt-space-md text-body-md">¿Ya tienes cuenta? <a class="text-secondary" href="{% url 'login' %}">Inicia sesión</a></p>
+  </section>
+</main>
+{% endblock codigoDinamico %}

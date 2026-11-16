@@ -1,0 +1,143 @@
+{% extends 'administrador/index.html' %}
+
+{% block title %}Actualizar Producto | Administrador{% endblock title %}
+
+{% block codigoDinamico %}
+<main class="flex-1 flex flex-col justify-center items-center px-margin py-space-xl bg-surface">
+  <div class="w-full max-w-lg bg-surface-container-lowest p-space-lg rounded-full shadow-sm flex flex-col gap-space-md">
+    <div>
+      <span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">Edición de Catálogo</span>
+      <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight mt-1">Actualizar Producto</h2>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="flex flex-col gap-space-sm">
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="text-error">{{ form.non_field_errors }}</div>{% endif %}
+      {% for field in form %}
+      <div class="flex flex-col gap-1">
+        <label for="{{ field.id_for_label }}" class="font-label-md text-primary">{{ field.label }}</label>
+        {{ field }}
+        {% if field.name == "imagen" and producto.imagen %}
+        <img id="imagen-actual" src="{{ producto.imagen.url }}" alt="Foto actual de {{ producto.nombre_producto }}" class="mt-2 h-32 w-32 rounded-xl object-cover">
+        {% endif %}
+        {% for error in field.errors %}<p class="text-body-sm text-error">{{ error }}</p>{% endfor %}
+      </div>
+      {% endfor %}
+
+      <div class="flex flex-col gap-1">
+        <label for="imagenes_adicionales" class="font-label-md text-primary">Agregar más fotos</label>
+        <input id="imagenes_adicionales" name="imagenes_adicionales" type="file" accept="image/*" multiple
+               class="rounded-lg border border-outline-variant p-3">
+        <p class="text-body-sm text-on-surface-variant">Puedes seleccionar varias fotos a la vez.</p>
+      </div>
+
+      <div class="flex gap-space-xs">
+        <button type="submit" class="flex-1 h-11 bg-primary-container text-on-primary font-label-lg rounded-full hover:bg-secondary transition-colors shadow-sm">
+          Guardar Cambios
+        </button>
+        <a href="{% url 'mostrar_productos' %}" class="h-11 px-space-md flex items-center justify-center bg-surface-container text-primary font-label-lg rounded-full hover:bg-outline-variant transition-colors">
+          Cancelar
+        </a>
+      </div>
+    </form>
+
+    {% if producto.imagen %}
+    <form method="post" action="{% url 'eliminar_imagen_producto' producto.id %}" class="pt-1">
+      {% csrf_token %}
+      <button type="submit" class="eliminar-imagen-btn" onclick="return confirm('¿Eliminar la foto actual de este producto?');">
+        Eliminar imagen
+      </button>
+    </form>
+    {% endif %}
+
+    {% if producto.galeria.exists %}
+    <section class="flex flex-col gap-3 border-t border-outline-variant pt-4">
+      <h3 class="font-label-lg text-primary">Fotos del producto</h3>
+      <div class="grid grid-cols-2 gap-3">
+        {% for foto in producto.galeria.all %}
+        <article class="rounded-xl border border-outline-variant bg-surface-container-lowest p-2">
+          <img src="{{ foto.imagen.url }}" alt="Foto de {{ producto.nombre_producto }}"
+               class="h-28 w-full rounded-lg object-cover">
+          {% if foto.es_principal %}
+          <span class="foto-principal-badge">Foto principal</span>
+          {% else %}
+          <form method="post" action="{% url 'establecer_imagen_principal' producto.id foto.id %}" class="mt-2">
+            {% csrf_token %}
+            <button type="submit" class="principal-imagen-btn">Usar como principal</button>
+          </form>
+          {% endif %}
+          <form method="post" action="{% url 'eliminar_foto_galeria' producto.id foto.id %}" class="mt-2">
+            {% csrf_token %}
+            <button type="submit" class="eliminar-imagen-btn eliminar-foto-galeria"
+                    onclick="return confirm('¿Eliminar esta foto?');">Eliminar foto</button>
+          </form>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+  </div>
+</main>
+
+<style>
+  .eliminar-imagen-btn {
+    width: 100%;
+    min-height: 44px;
+    border: 1px solid #f1e4c6;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #b9e6f4, #dff4f8 55%, #f8efd9);
+    color: #355b66;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(87, 139, 151, 0.16);
+    cursor: pointer;
+  }
+
+  .foto-principal-badge {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 6px 10px;
+    border-radius: 9999px;
+    background: #f8efd9;
+    color: #355b66;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .principal-imagen-btn {
+    width: 100%;
+    min-height: 38px;
+    border: 1px solid #b9e6f4;
+    border-radius: 9999px;
+    background: #edf8fb;
+    color: #355b66;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .eliminar-foto-galeria {
+    min-height: 38px;
+    font-size: 0.8rem;
+  }
+
+  .eliminar-imagen-btn:hover {
+    background: linear-gradient(135deg, #a9dae9, #d3eef4 55%, #f4e7c5);
+  }
+
+</style>
+
+<script>
+  const imagenInput = document.getElementById("id_imagen");
+  const imagenActual = document.getElementById("imagen-actual");
+  if (imagenInput && imagenActual) {
+    imagenInput.addEventListener("change", (event) => {
+      const archivo = event.target.files[0];
+      if (!archivo) return;
+      const lector = new FileReader();
+      lector.onload = (e) => {
+        imagenActual.src = e.target.result;
+      };
+      lector.readAsDataURL(archivo);
+    });
+  }
+</script>
+{% endblock codigoDinamico %}

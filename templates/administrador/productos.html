@@ -1,0 +1,61 @@
+{% extends 'administrador/index.html' %}
+
+{% block title %}Productos | Administrador{% endblock title %}
+
+{% block codigoDinamico %}
+<main class="flex-1 w-full bg-surface px-margin pt-20 pb-24">
+  <div class="mx-auto flex max-w-6xl flex-col gap-space-md">
+    <div class="flex flex-wrap items-end justify-between gap-space-sm">
+      <div>
+        <span class="font-label-sm text-secondary uppercase tracking-widest">Catálogo completo</span>
+        <h1 class="font-headline-lg text-primary">Productos</h1>
+      </div>
+      {% if request.user.is_staff %}
+      <a href="{% url 'crear_producto' %}" class="rounded-full bg-primary-container px-5 py-3 text-on-primary">Crear producto</a>
+      <a href="{% url 'mostrar_marcas' %}" class="rounded-full bg-surface-container px-5 py-3 text-primary">Gestionar marcas</a>
+      {% else %}
+      <p class="text-body-sm text-on-surface-variant">
+        La gestión del catálogo está disponible para el personal.
+        <a href="{% url 'login' %}?next={% url 'mostrar_productos' %}" class="text-secondary underline">Iniciar sesión como personal</a>
+      </p>
+      {% endif %}
+    </div>
+    <form action="{% url 'buscar_productos' %}" method="get" class="flex gap-space-xs">
+      <label class="sr-only" for="marca-producto">Buscar por marca</label>
+      <input id="marca-producto" type="search" name="marca_producto" value="{{ marca_producto }}" placeholder="Buscar productos por marca..." class="min-w-0 flex-1 rounded-full border border-outline-variant bg-surface-container-lowest px-4 py-3">
+      <button type="submit" class="rounded-full bg-primary-container px-5 py-3 text-on-primary">Buscar</button>
+    </form>
+    {% if respuesta %}<p class="text-on-surface-variant" role="status">{{ respuesta }}</p>{% endif %}
+    <div class="overflow-x-auto rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+      <table class="w-full border-collapse text-left">
+        <thead><tr class="border-b border-outline-variant text-on-surface-variant">
+          <th class="px-3 py-3">ID</th><th class="px-3 py-3">Foto</th><th class="px-3 py-3">Producto</th><th class="px-3 py-3">Marca</th><th class="px-3 py-3">Precio</th><th class="px-3 py-3">Existencias</th>
+          {% if request.user.is_staff %}<th class="px-3 py-3 text-right">Acciones</th>{% endif %}
+        </tr></thead>
+        <tbody class="divide-y divide-surface-container-low">
+          {% for producto in productos %}
+          <tr>
+            <td class="px-3 py-3">{{ producto.id }}</td>
+            <td class="px-3 py-3">
+              {% if producto.imagen %}<img src="{{ producto.imagen.url }}" alt="{{ producto.nombre_producto }}" class="h-12 w-12 rounded-lg object-cover">{% else %}<span class="text-on-surface-variant">Sin foto</span>{% endif %}
+            </td>
+            <td class="px-3 py-3 font-semibold">{{ producto.nombre_producto }}</td>
+            <td class="px-3 py-3">{{ producto.marca_producto.nombre_marca }}</td>
+            <td class="px-3 py-3">${{ producto.precio|floatformat:2 }}</td>
+            <td class="px-3 py-3">{{ producto.stock }}</td>
+            {% if request.user.is_staff %}
+            <td class="whitespace-nowrap px-3 py-3 text-right">
+              <a href="{% url 'editar_producto' producto.id %}" class="mr-3 text-secondary">Editar</a>
+              <a href="{% url 'eliminar_producto' producto.id %}" class="text-error">Eliminar</a>
+            </td>
+            {% endif %}
+          </tr>
+          {% empty %}
+          <tr><td colspan="{% if request.user.is_staff %}7{% else %}6{% endif %}" class="px-3 py-8 text-center text-on-surface-variant">No hay productos disponibles.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+{% endblock codigoDinamico %}

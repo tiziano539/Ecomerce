@@ -1,0 +1,45 @@
+{% extends 'administrador/index.html' %}
+
+{% block title %}Buscar Usuarios | Administrador{% endblock title %}
+
+{% block codigoDinamico %}
+<main class="flex-1 flex flex-col relative w-full pt-14 pb-20 bg-surface">
+  <div class="px-margin pt-space-md pb-space-lg flex flex-col gap-space-md">
+    <div>
+      <span class="font-label-sm text-label-sm text-secondary tracking-widest uppercase block mb-0.5">Consultas de Usuario</span>
+      <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Buscar Usuarios</h2>
+    </div>
+
+    <form method="get" action="{% url 'buscar_usuarios' %}" class="flex gap-space-xs">
+      <input type="text" name="usuario" value="{{ consulta }}" placeholder="Nombre de usuario o correo..." class="flex-1 h-12 px-space-md bg-surface-container-lowest border border-outline-variant rounded-full text-body-md text-primary focus:outline-none focus:border-secondary transition-colors shadow-sm">
+      <button type="submit" class="h-12 px-space-lg bg-primary-container text-on-primary font-label-lg rounded-full hover:bg-secondary transition-colors shadow-sm flex items-center gap-space-xs">
+        <span class="material-symbols-outlined text-[20px]">search</span>
+        <span>Buscar</span>
+      </button>
+    </form>
+
+    <div class="bg-surface-container-lowest p-space-md rounded-full shadow-sm overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="border-b border-outline-variant font-label-md text-label-md text-on-surface-variant uppercase">
+            <th class="py-2 px-3">Usuario</th>
+            <th class="py-2 px-3">Email</th>
+          </tr>
+        </thead>
+        <tbody class="font-body-md text-body-md text-primary divide-y divide-surface-container-low">
+          {% for u in resultados %}
+          <tr>
+            <td class="py-3 px-3 font-semibold">{{ u.nombre_usuario }}</td>
+            <td class="py-3 px-3">{{ u.email_usuario }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="2" class="py-4 px-3 text-center text-on-surface-variant">{% if consulta %}No se encontraron usuarios.{% else %}Ingresa un nombre o correo para buscar.{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+{% endblock codigoDinamico %}

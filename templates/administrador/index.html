@@ -1,0 +1,216 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="h-full" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<meta content="mobile_tab" name="shell-type"/>
+
+<title>{% block title %}Inicio{% endblock title %}</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+<!-- Librerías compartidas de interfaz y notificaciones -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+<!-- Carga del CSS estático -->
+<link rel="stylesheet" href="{% static 'administrador/styles.css' %}" />
+
+<link rel="shortcut icon" type="image/x-icon" href="{% static 'administrador/img/favicon.ico' %}?v=2"/>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-surface": "#0b1c30", "secondary-fixed": "#b7eaff", "secondary": "#02677f", "error-container": "#ffdad6", "surface-dim": "#cbdbf5", "on-tertiary": "#ffffff", "on-primary-fixed-variant": "#3a4859", "on-secondary-fixed": "#001f28", "on-secondary-fixed-variant": "#004e60", "surface-container": "#e5eeff", "primary": "#000000", "on-tertiary-fixed-variant": "#2b4963", "tertiary-container": "#001d31", "tertiary-fixed-dim": "#abcae8", "outline-variant": "#c4c6cc", "inverse-primary": "#bac8dc", "tertiary-fixed": "#cce5ff", "secondary-container": "#98e2fd", "on-tertiary-container": "#6987a3", "on-error-container": "#93000a", "primary-fixed": "#d6e4f9", "surface-tint": "#525f71", "surface": "#f8f9ff", "on-primary-container": "#778598", "on-secondary-container": "#00667e", "on-tertiary-fixed": "#001d31", "error": "#ba1a1a", "surface-bright": "#f8f9ff", "surface-container-highest": "#d3e4fe", "surface-variant": "#d3e4fe", "surface-container-high": "#dce9ff", "secondary-fixed-dim": "#87d1ec", "on-primary-fixed": "#0f1c2c", "background": "#f8f9ff", "primary-container": "#0f1c2c", "primary-fixed-dim": "#bac8dc", "on-primary": "#ffffff", "tertiary": "#000000", "on-surface-variant": "#44474c", "surface-container-low": "#eff4ff", "outline": "#74777d", "on-error": "#ffffff", "on-background": "#0b1c30", "inverse-surface": "#213145", "inverse-on-surface": "#eaf1ff", "on-secondary": "#ffffff", "surface-container-lowest": "#ffffff" }, borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, spacing: { "space-lg": "1.5rem", "gutter-desktop": "1.5rem", "margin-tablet": "2rem", "space-sm": "0.5rem", "space-xl": "2.5rem", "space-md": "1rem", "gutter": "0.75rem", "space-xs": "0.25rem", "margin-desktop": "3rem", "margin": "1rem" }, fontFamily: { "label-sm": ["Plus Jakarta Sans"], "display-hero": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "display-hero-mobile": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"] }, fontSize: { "label-sm": ["10px", { "lineHeight": "12px", "letterSpacing": "0.06em", "fontWeight": "700" }], "display-hero": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "label-lg": ["13px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }], "display-hero-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.025em", "fontWeight": "700" }], "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "label-md": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }] } } } };</script>
+
+<!-- Librerías de Bootstrap y Toastr -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<!-- Carga del JS estático -->
+<script src="{% static 'administrador/main.js' %}" defer></script>
+</head>
+
+<body class="bg-surface text-on-surface antialiased flex flex-col min-h-screen">
+
+<!-- HEADER / NAVEGACIÓN PRINCIPAL -->
+<header class="fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+<div class="h-14 px-margin flex items-center justify-between">
+    <!-- Logo e Inicio -->
+    <a href="{% url 'index' %}" class="flex items-center gap-space-xs">
+        <img alt="AURA Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VJ4bSxF3fORG6jS4-9q2hVQMWFlJ2jIao336begujOpn8EkqnFZsPd8sGNBBk9x0A8RbDQ97MgX0DOX-KyRXtCPfJoB94CqyNbHmpGO0BM5RCKR6zWLzPcCJfJ933FBqcJZOoGLYYcOcsCWPuYRHOzIhEuSZry3ayEp3uggPBLn6x-WuIconKlCPDOa1NVxluWgQWc-WlQk_u4L7FM5kkewa3OHw4yF_DWMc9hUvb8vg"/>
+        <span class="font-headline-sm text-headline-sm text-primary tracking-tight">Autopartes</span>
+    </a>
+
+    <!-- Enlaces del Navbar -->
+    <ul class="hidden md:flex items-center gap-space-md font-label-md text-label-md text-on-surface-variant">
+        <li><a href="{% url 'index' %}" class="hover:text-primary transition-colors">Home</a></li>
+        <li><a href="{% url 'contacto' %}" class="hover:text-primary transition-colors">Contacto</a></li>
+        <li><a href="{% url 'registro' %}" class="hover:text-primary transition-colors">Registrarse</a></li>
+        <li><a href="{% url 'about' %}" class="hover:text-primary transition-colors">Quiénes Somos</a></li>
+        <li><a href="{% url 'mostrar_productos' %}" class="hover:text-primary transition-colors">Productos</a></li>
+        <li><a href="{% url 'catalogo' %}" class="hover:text-primary transition-colors">Tienda</a></li>
+        {% if request.user.is_staff %}
+        <li><a href="{% url 'mostrar_marcas' %}" class="hover:text-primary transition-colors">Marcas</a></li>
+        <li><a href="{% url 'mostrar_usuarios' %}" class="hover:text-primary transition-colors">Usuarios</a></li>
+        <li><a href="{% url 'buscar_usuarios' %}" class="hover:text-primary transition-colors">Buscar usuarios</a></li>
+        <li><a href="{% url 'mostrar_ventas_detalles' %}" class="hover:text-primary transition-colors">Ventas</a></li>
+        <li><a href="{% url 'listar_mensajes' %}" class="hover:text-primary transition-colors">Mensajes</a></li>
+        <li><a href="{% url 'buscar_ventas_detalle' %}" class="hover:text-primary transition-colors">Buscar ventas</a></li>
+        {% endif %}
+        {% if request.user.is_authenticated %}
+          {% if not request.user.is_staff %}
+          <li><a href="{% url 'panel_cliente' %}" class="hover:text-primary transition-colors">Mi cuenta</a></li>
+          <li><a href="{% url 'perfil_cliente' %}" class="hover:text-primary transition-colors">Perfil</a></li>
+          <li><a href="{% url 'mis_pedidos' %}" class="hover:text-primary transition-colors">Mis pedidos</a></li>
+          <li><a href="{% url 'carrito' %}" class="hover:text-primary transition-colors">Carrito</a></li>
+          <li><form action="{% url 'logout_cliente' %}" method="post">{% csrf_token %}<button class="px-space-md py-1.5 rounded-full bg-primary-container text-on-primary hover:bg-secondary transition-colors" type="submit">Cerrar sesión</button></form></li>
+          {% else %}
+          <li><form action="{% url 'logout' %}" method="post">{% csrf_token %}<button class="px-space-md py-1.5 rounded-full bg-primary-container text-on-primary hover:bg-secondary transition-colors" type="submit">Cerrar sesión</button></form></li>
+          {% endif %}
+        {% else %}
+        <li><a href="{% url 'login_cliente' %}" class="hover:text-primary transition-colors">Ingresar</a></li>
+        <li><a href="{% url 'registro_cliente' %}" class="px-space-md py-1.5 rounded-full bg-primary-container text-on-primary hover:bg-secondary transition-colors">Crear cuenta</a></li>
+        <li><a href="{% url 'login' %}" class="hover:text-primary transition-colors">Acceso administrador</a></li>
+        {% endif %}
+    </ul>
+    <!-- Accesos rápidos derecha -->
+    <div class="flex items-center gap-space-xs">
+        <a class="w-11 h-11 flex items-center justify-center text-on-surface hover:text-secondary transition-colors" data-path="explorar" href="{% url 'catalogo' %}"><span class="material-symbols-outlined text-[22px]">search</span></a>
+        {% if request.user.is_staff %}
+        <a class="relative w-11 h-11 flex items-center justify-center text-on-surface hover:text-secondary transition-colors" data-path="ventas" href="{% url 'mostrar_ventas_detalles' %}"><span class="material-symbols-outlined text-[22px]">receipt_long</span></a>
+        {% endif %}
+        <a class="w-11 h-11 flex items-center justify-center" data-path="perfil" href="{% if request.user.is_authenticated %}{% if request.user.is_staff %}{% url 'index' %}{% else %}{% url 'panel_cliente' %}{% endif %}{% else %}{% url 'login_cliente' %}{% endif %}"><span class="material-symbols-outlined text-[22px]">person</span></a>
+    </div>
+</div>
+</header>
+
+{% if messages %}
+<div class="fixed right-4 top-16 z-50 flex w-full max-w-md flex-col gap-2 px-4" aria-live="polite">
+  {% for message in messages %}
+  <p class="rounded-lg bg-surface-container-lowest p-4 text-body-md text-primary shadow-md">{{ message }}</p>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- BLOQUE DINÁMICO DE CONTENIDO -->
+{% block codigoDinamico %}
+<main class="flex-1 flex flex-col relative w-full pt-14 pb-20 bg-surface">
+<div class="flex flex-col w-full">
+<section class="px-margin pt-space-md pb-space-sm flex flex-col gap-space-sm">
+<div class="relative w-full">
+<div class="absolute inset-y-0 left-0 pl-space-md flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="w-full h-12 pl-11 pr-11 bg-surface-container-lowest text-primary placeholder-on-surface-variant font-body-md text-body-md rounded-full shadow-sm outline-none transition-all duration-200" id="search-input" placeholder="Buscar objetos, mobiliario, piezas de autor..." type="text"/>
+</div>
+<div class="flex items-center gap-space-xs overflow-x-auto no-scrollbar py-space-xs -mx-margin px-margin">
+<button class="category-pill flex-shrink-0 rounded-full bg-primary-container px-space-md py-2 font-label-md text-on-primary" data-filter="all" type="button">Todas las marcas</button>
+{% for marca in marcas %}
+<button class="category-pill flex-shrink-0 rounded-full bg-surface-container-lowest px-space-md py-2 font-label-md text-on-surface-variant" data-filter="{{ marca.nombre_marca|lower }}" type="button">{{ marca.nombre_marca }}</button>
+{% endfor %}
+</div>
+</section>
+
+<section class="px-margin py-space-sm">
+<div class="relative w-full rounded-full overflow-hidden bg-gradient-to-br from-surface-container via-surface-container-high to-secondary-fixed/30 p-space-lg shadow-sm flex flex-col justify-between">
+<div class="absolute -right-12 -top-12 w-48 h-48 rounded-full bg-secondary-container/20 blur-2xl pointer-events-none"></div>
+<div class="flex items-center gap-space-xs mb-space-md">
+<span class="inline-flex items-center px-space-sm py-0.5 rounded-full bg-surface-container-lowest/80 backdrop-blur-sm text-secondary font-label-sm text-label-sm uppercase tracking-wider shadow-sm">
+          Edición Limitada
+        </span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Lanzamiento</span>
+</div>
+<div class="relative z-10 max-w-[270px]">
+<h2 class="font-display-hero-mobile text-display-hero-mobile text-primary tracking-tight leading-tight">
+          Esencia &amp; Forma:<br/>Colección 2025
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs mb-space-lg">
+          Líneas puras, texturas nobles y tonalidades celestes que habitan el espacio con calma.
+        </p>
+</div>
+<div class="relative z-10 flex items-center justify-between pt-space-xs">
+<a href="{% url 'catalogo' %}" class="h-11 px-space-lg bg-primary-container text-on-primary font-label-lg text-label-lg rounded-full flex items-center gap-space-xs shadow-md active:scale-95 transition-transform">
+<span>Descubrir Colección</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+<span class="font-label-sm text-label-sm text-secondary tracking-widest uppercase">
+          01 / 04
+        </span>
+</div>
+</div>
+</section>
+
+<section class="pt-space-lg pb-space-sm">
+<div class="px-margin flex items-end justify-between mb-space-md">
+<div>
+<span class="font-label-sm text-label-sm text-secondary tracking-widest uppercase block mb-0.5">Selección Curada</span>
+<h3 class="font-headline-lg text-headline-lg text-primary tracking-tight">Tendencias</h3>
+</div>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary flex items-center gap-0.5 transition-colors" href="{% url 'catalogo' %}">
+        Ver catálogo
+        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</a>
+</div>
+<div class="flex gap-gutter overflow-x-auto no-scrollbar px-margin snap-x snap-mandatory">
+{% for producto in productos %}
+<article class="catalog-item snap-start flex-shrink-0 w-64 bg-surface-container-lowest rounded-xl p-space-sm flex flex-col shadow-sm" data-search="{{ producto.nombre_producto|lower }} {{ producto.marca_producto.nombre_marca|lower }}" data-brand="{{ producto.marca_producto.nombre_marca|lower }}">
+<div class="flex aspect-[4/5] w-full items-center justify-center rounded-xl bg-surface-container-low text-secondary"><span class="material-symbols-outlined text-6xl">inventory_2</span></div>
+<div class="p-space-xs pt-space-sm flex flex-1 flex-col justify-between gap-space-xs">
+<div>
+<p class="font-label-md text-on-surface-variant uppercase tracking-wider">{{ producto.marca_producto.nombre_marca }}</p>
+<h4 class="font-headline-sm text-primary">{{ producto.nombre_producto }}</h4>
+</div>
+<a class="font-label-md text-secondary" href="{% url 'detalle' producto.pk %}">Ver producto</a>
+</div>
+</article>
+{% empty %}
+<p class="px-margin text-body-md text-on-surface-variant">Todavía no hay productos en el catálogo.</p>
+{% endfor %}
+<p id="no-product-results" class="px-margin text-body-md text-on-surface-variant" hidden>No hay productos que coincidan con la búsqueda.</p>
+</div>
+</section>
+</div>
+</main>
+{% endblock codigoDinamico %}
+
+{% if request.resolver_match.url_name == 'index' %}
+<section class="px-margin py-space-lg mb-20">
+  <div class="mx-auto w-full max-w-5xl overflow-hidden rounded-xl border border-outline-variant/40 bg-surface-container-lowest shadow-sm">
+    <div class="px-space-md py-space-md">
+      <span class="font-label-sm uppercase tracking-widest text-secondary">Visítanos</span>
+      <h3 class="font-headline-md text-primary">Nuestra ubicación: Morón</h3>
+    </div>
+    <iframe
+      class="block h-[320px] w-full sm:h-[400px]"
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d52503.12777676213!2d-58.65772001267576!3d-34.66870447627966!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcc76f57e3be01%3A0xa488fcdcec5b600f!2sB1708%20Mor%C3%B3n%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1793213562396!5m2!1ses-419!2sar"
+      title="Mapa de nuestra ubicación en Morón"
+      loading="lazy"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen>
+    </iframe>
+  </div>
+</section>
+{% endif %}
+
+<!-- Enlaces legales -->
+<div class="w-full bg-surface-container-lowest px-margin py-3 flex flex-wrap justify-center gap-x-6 gap-y-2 border-t border-outline-variant/30">
+<a href="{% url 'politica_privacidad' %}" class="font-label-md text-label-md text-on-surface-variant hover:text-primary">Política de privacidad</a>
+<a href="{% url 'terminos_condiciones' %}" class="font-label-md text-label-md text-on-surface-variant hover:text-primary">Términos y condiciones</a>
+</div>
+
+<!-- NAVEGACIÓN INFERIOR (Mobile Nav) -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.04)]" data-active-classes="text-primary-container font-semibold">
+<div class="flex justify-around items-center h-16 px-space-xs">
+<a aria-current="page" class="flex flex-col items-center justify-center gap-space-xs min-w-[56px] h-11 transition-colors text-primary-container font-semibold" href="{% url 'index' %}"><span class="material-symbols-outlined text-[22px]">storefront</span><span class="font-label-md text-label-md">Inicio</span></a>
+<a class="flex flex-col items-center justify-center gap-space-xs min-w-[56px] h-11 text-on-surface-variant hover:text-on-surface transition-colors" href="{% url 'catalogo' %}"><span class="material-symbols-outlined text-[22px]">search</span><span class="font-label-md text-label-md">Productos</span></a>
+<a class="flex flex-col items-center justify-center gap-space-xs min-w-[56px] h-11 text-on-surface-variant hover:text-on-surface transition-colors" href="{% url 'about' %}"><span class="material-symbols-outlined text-[22px]">info</span><span class="font-label-md text-label-md">Nosotros</span></a>
+<a class="flex flex-col items-center justify-center gap-space-xs min-w-[56px] h-11 text-on-surface-variant hover:text-on-surface transition-colors" href="{% if request.user.is_authenticated %}{% if request.user.is_staff %}{% url 'index' %}{% else %}{% url 'panel_cliente' %}{% endif %}{% else %}{% url 'login_cliente' %}{% endif %}"><span class="material-symbols-outlined text-[22px]">person</span><span class="font-label-md text-label-md">Perfil</span></a>
+</div>
+</nav>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+{% extends 'administrador/index.html' %}
+
+{% block title %}Iniciar Sesión Cliente | Tienda{% endblock title %}
+
+{% block codigoDinamico %}
+<main class="flex-1 flex flex-col justify-center items-center px-margin py-space-xl bg-surface">
+  <div class="w-full max-w-md bg-surface-container-lowest p-space-lg rounded-full shadow-sm flex flex-col gap-space-md">
+    <div class="text-center">
+      <span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">Portal Clientes</span>
+      <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight mt-1">Ingresar a tu Cuenta</h2>
+    </div>
+
+    <form method="post" class="flex flex-col gap-space-sm">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      {% if form.non_field_errors %}<div class="text-error" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+      {% for field in form %}
+      <div class="flex flex-col gap-1">
+        <label for="{{ field.id_for_label }}" class="block font-label-md text-on-surface-variant">{{ field.label }}</label>
+        {{ field }}
+        {% for error in field.errors %}<p class="text-body-sm text-error" role="alert">{{ error }}</p>{% endfor %}
+      </div>
+      {% endfor %}
+
+      <button type="submit" class="w-full h-11 mt-space-xs bg-primary-container text-on-primary font-label-lg rounded-full hover:bg-secondary transition-colors shadow-sm">
+        Iniciar Sesión
+      </button>
+    </form>
+
+    <p class="text-center font-body-sm text-body-sm text-on-surface-variant pt-2">
+      ¿Aún no tienes cuenta? <a href="{% url 'registro_cliente' %}" class="text-secondary font-semibold hover:underline">Registrate aquí</a>
+    </p>
+  </div>
+</main>
+{% endblock codigoDinamico %}

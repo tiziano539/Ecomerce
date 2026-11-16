@@ -1,0 +1,30 @@
+{% extends 'administrador/index.html' %}
+
+{% block title %}Eliminar Detalle de Venta | Administrador{% endblock title %}
+
+{% block codigoDinamico %}
+<main class="flex-1 flex flex-col justify-center items-center px-margin py-space-xl bg-surface">
+  <div class="w-full max-w-md bg-surface-container-lowest p-space-lg rounded-full shadow-sm flex flex-col text-center gap-space-md">
+    <div class="w-12 h-12 rounded-full bg-error-container text-error flex items-center justify-center mx-auto">
+      <span class="material-symbols-outlined text-[28px]">delete</span>
+    </div>
+
+    <div>
+      <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Confirmar Eliminación</h2>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-1">
+        ¿Deseas borrar la venta <strong>#{{ detalle.id }}</strong> de {{ detalle.usuario.nombre_usuario }} por {{ detalle.producto.nombre_producto }}?
+      </p>
+    </div>
+
+    <form method="post" class="flex gap-space-xs pt-space-xs">
+      {% csrf_token %}
+      <button type="submit" class="flex-1 h-11 bg-[#dc2626] text-white font-label-lg rounded-full hover:opacity-90 transition-opacity shadow-sm">
+        Sí, Eliminar
+      </button>
+      <a href="{% url 'mostrar_ventas_detalles' %}" class="flex-1 h-11 flex items-center justify-center bg-surface-container text-primary font-label-lg rounded-full hover:bg-outline-variant transition-colors">
+        Cancelar
+      </a>
+    </form>
+  </div>
+</main>
+{% endblock codigoDinamico %}

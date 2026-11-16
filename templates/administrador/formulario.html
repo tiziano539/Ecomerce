@@ -1,0 +1,35 @@
+{% extends 'administrador/index.html' %}
+
+{% block title %}{{ titulo }} | Administrador{% endblock title %}
+
+{% block codigoDinamico %}
+<main class="flex-1 w-full bg-surface px-margin pt-20 pb-24">
+  <section class="mx-auto max-w-2xl rounded-xl bg-surface-container-lowest p-space-lg shadow-sm">
+    <h1 class="mb-space-md font-headline-lg text-primary">{{ titulo }}</h1>
+    <form method="post" class="flex flex-col gap-space-md">
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="text-error">{{ form.non_field_errors }}</div>{% endif %}
+      {% for field in form %}
+      <div class="flex flex-col gap-1">
+        <label for="{{ field.id_for_label }}" class="font-label-md text-primary">{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}<div class="text-body-sm text-on-surface-variant">{{ field.help_text|safe }}</div>{% endif %}
+        {% for error in field.errors %}<p class="text-body-sm text-error">{{ error }}</p>{% endfor %}
+      </div>
+      {% endfor %}
+      <div class="flex flex-wrap gap-space-sm">
+        <button type="submit" class="rounded-full bg-primary-container px-5 py-3 text-on-primary">Guardar</button>
+        {% if request.resolver_match.url_name == 'crear_producto' or request.resolver_match.url_name == 'editar_producto' %}
+        <a href="{% url 'mostrar_productos' %}" class="rounded-full bg-surface-container px-5 py-3 text-primary">Cancelar</a>
+        {% elif request.resolver_match.url_name == 'crear_marca' or request.resolver_match.url_name == 'editar_marca' %}
+        <a href="{% url 'mostrar_marcas' %}" class="rounded-full bg-surface-container px-5 py-3 text-primary">Cancelar</a>
+        {% elif request.resolver_match.url_name == 'crear_usuario' or request.resolver_match.url_name == 'editar_usuario' %}
+        <a href="{% url 'mostrar_usuarios' %}" class="rounded-full bg-surface-container px-5 py-3 text-primary">Cancelar</a>
+        {% else %}
+        <a href="{% url 'mostrar_ventas_detalles' %}" class="rounded-full bg-surface-container px-5 py-3 text-primary">Cancelar</a>
+        {% endif %}
+      </div>
+    </form>
+  </section>
+</main>
+{% endblock codigoDinamico %}
